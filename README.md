@@ -1,10 +1,10 @@
-# go-modbus-cli
+# gomodbus
 
 A powerful, enhanced command-line tool for Modbus communication that replicates all **mbpoll** functionality while adding advanced capabilities from the **gomodbus** library.
 
 ## 🚀 Overview
 
-`go-modbus-cli` is a feature-complete replacement for the popular `mbpoll` tool, built with modern Go and the robust gomodbus library. It provides all the functionality of mbpoll plus additional transport modes, enhanced data types, and improved error handling.
+`gomodbus` is a feature-complete replacement for the popular `mbpoll` tool, built with modern Go and the robust gomodbus library. It provides all the functionality of mbpoll plus additional transport modes, enhanced data types, and improved error handling.
 
 ## ✨ Key Features
 
@@ -34,13 +34,13 @@ A powerful, enhanced command-line tool for Modbus communication that replicates 
 ```bash
 # Clone the repository
 git clone <repository-url>
-cd go-modbus-cli
+cd gomodbus
 
 # Build the CLI
-go build -o go-modbus-cli main.go
+go build -o gomodbus main.go
 
 # (Optional) Install to system PATH
-sudo cp go-modbus-cli /usr/local/bin/
+sudo cp gomodbus /usr/local/bin/
 ```
 
 ### Dependencies
@@ -53,7 +53,7 @@ go mod tidy  # Install/update dependencies
 
 ### Basic Syntax
 ```bash
-go-modbus-cli [OPTIONS] DEVICE|HOST [WRITE_VALUES...] [OPTIONS]
+gomodbus [OPTIONS] DEVICE|HOST [WRITE_VALUES...] [OPTIONS]
 ```
 
 ### Essential Options
@@ -71,12 +71,12 @@ go-modbus-cli [OPTIONS] DEVICE|HOST [WRITE_VALUES...] [OPTIONS]
 
 #### TCP Options
 ```bash
-go-modbus-cli -m tcp -t 4 -r 1 -c 2 192.168.1.100
+gomodbus -m tcp -t 4 -r 1 -c 2 192.168.1.100
 ```
 
 #### RTU Options
 ```bash
-go-modbus-cli -m rtu -b 19200 -d 8 -s 1 -P even -t 4 -r 1 -c 2 /dev/ttyUSB0
+gomodbus -m rtu -b 19200 -d 8 -s 1 -P even -t 4 -r 1 -c 2 /dev/ttyUSB0
 ```
 
 ## 📊 Data Types
@@ -98,32 +98,32 @@ go-modbus-cli -m rtu -b 19200 -d 8 -s 1 -P even -t 4 -r 1 -c 2 /dev/ttyUSB0
 
 ### 1. **Modbus TCP** (Standard)
 ```bash
-go-modbus-cli -m tcp -t 4 -r 1 -c 2 192.168.1.100
+gomodbus -m tcp -t 4 -r 1 -c 2 192.168.1.100
 ```
 
 ### 2. **Modbus TCP over TLS** (Secure)
 ```bash
-go-modbus-cli -m tls -t 4 -r 1 -c 2 192.168.1.100
+gomodbus -m tls -t 4 -r 1 -c 2 192.168.1.100
 ```
 
 ### 3. **Modbus TCP over UDP**
 ```bash
-go-modbus-cli -m udp -t 4 -r 1 -c 2 192.168.1.100
+gomodbus -m udp -t 4 -r 1 -c 2 192.168.1.100
 ```
 
 ### 4. **Modbus RTU** (Serial)
 ```bash
-go-modbus-cli -m rtu -b 19200 -t 4 -r 1 -c 2 /dev/ttyUSB0
+gomodbus -m rtu -b 19200 -t 4 -r 1 -c 2 /dev/ttyUSB0
 ```
 
 ### 5. **RTU over TCP** (Tunneling)
 ```bash
-go-modbus-cli -m rtuovertcp -t 4 -r 1 -c 2 192.168.1.100
+gomodbus -m rtuovertcp -t 4 -r 1 -c 2 192.168.1.100
 ```
 
 ### 6. **RTU over UDP** (Tunneling)
 ```bash
-go-modbus-cli -m rtuoverudp -t 4 -r 1 -c 2 192.168.1.100
+gomodbus -m rtuoverudp -t 4 -r 1 -c 2 192.168.1.100
 ```
 
 ## 💡 Examples
@@ -132,61 +132,61 @@ go-modbus-cli -m rtuoverudp -t 4 -r 1 -c 2 192.168.1.100
 
 #### Read Holding Registers (mbpoll equivalent)
 ```bash
-go-modbus-cli -t 4 -r 1 -c 2 192.168.1.100
+gomodbus -t 4 -r 1 -c 2 192.168.1.100
 ```
 
 #### Read Input Registers as 32-bit Floats
 ```bash
-go-modbus-cli -m rtu -t 3:float -r 1 -c 2 /dev/ttyUSB0
+gomodbus -m rtu -t 3:float -r 1 -c 2 /dev/ttyUSB0
 ```
 
 #### Read Coils with Continuous Polling
 ```bash
-go-modbus-cli -t 0 -r 1 -c 8 -l 500 192.168.1.100
+gomodbus -t 0 -r 1 -c 8 -l 500 192.168.1.100
 ```
 
 #### Read with Hex Display
 ```bash
-go-modbus-cli -t 4:hex -r 1 -c 4 192.168.1.100
+gomodbus -t 4:hex -r 1 -c 4 192.168.1.100
 ```
 
 ### Writing Operations
 
 #### Write Single Values to Holding Registers
 ```bash
-go-modbus-cli -t 4 -r 1 192.168.1.100 123 456 789
+gomodbus -t 4 -r 1 192.168.1.100 123 456 789
 ```
 
 #### Write 32-bit Integers
 ```bash
-go-modbus-cli -t 4:int -r 1 192.168.1.100 123456 -789012
+gomodbus -t 4:int -r 1 192.168.1.100 123456 -789012
 ```
 
 #### Write 32-bit Floats
 ```bash
-go-modbus-cli -t 4:float -r 1 192.168.1.100 3.14 -2.71
+gomodbus -t 4:float -r 1 192.168.1.100 3.14 -2.71
 ```
 
 #### Write Coils
 ```bash
-go-modbus-cli -t 0 -r 1 192.168.1.100 1 0 1 1
+gomodbus -t 0 -r 1 192.168.1.100 1 0 1 1
 ```
 
 ### Advanced Usage
 
 #### RTU over TCP Tunneling
 ```bash
-go-modbus-cli -m rtuovertcp -b 19200 -t 4 -r 1 -c 2 192.168.1.100
+gomodbus -m rtuovertcp -b 19200 -t 4 -r 1 -c 2 192.168.1.100
 ```
 
 #### Modbus TCP over TLS (Secure)
 ```bash
-go-modbus-cli -m tls -t 4 -r 1 -c 2 secure-modbus-server.com
+gomodbus -m tls -t 4 -r 1 -c 2 secure-modbus-server.com
 ```
 
 #### High-Speed Polling with Custom Timeout
 ```bash
-go-modbus-cli -t 4 -r 1 -c 1 -l 100 -o 0.5 192.168.1.100
+gomodbus -t 4 -r 1 -c 1 -l 100 -o 0.5 192.168.1.100
 ```
 
 ## ⚙️ Configuration Options
@@ -210,19 +210,19 @@ go-modbus-cli -t 4 -r 1 -c 1 -l 100 -o 0.5 192.168.1.100
 The CLI provides user-friendly error messages with helpful suggestions:
 
 ```bash
-$ go-modbus-cli
-go-modbus-cli: device or host parameter missing ! Try -h for help
+$ gomodbus
+gomodbus: device or host parameter missing ! Try -h for help
 
-$ go-modbus-cli -c 200 192.168.1.100
-go-modbus-cli: count must be between 1 and 125
+$ gomodbus -c 200 192.168.1.100
+gomodbus: count must be between 1 and 125
 
-$ go-modbus-cli -m invalid 192.168.1.100
-go-modbus-cli: unsupported mode: invalid (supported: tcp, tls, udp, rtu, rtuovertcp, rtuoverudp)
+$ gomodbus -m invalid 192.168.1.100
+gomodbus: unsupported mode: invalid (supported: tcp, tls, udp, rtu, rtuovertcp, rtuoverudp)
 ```
 
 ## 🆚 Comparison with mbpoll
 
-| Feature | mbpoll | go-modbus-cli |
+| Feature | mbpoll | gomodbus |
 |---------|--------|---------------|
 | Transport Modes | 2 (TCP, RTU) | 6 (TCP, TLS, UDP, RTU, RTU-over-TCP, RTU-over-UDP) |
 | Data Types | Basic | Extended (16/32/64-bit, configurable endianness) |
@@ -258,4 +258,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ---
 
-**go-modbus-cli** - Enhanced Modbus communication for the modern era 🚀
+**gomodbus** - Enhanced Modbus communication for the modern era 🚀

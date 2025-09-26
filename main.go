@@ -50,7 +50,7 @@ type ModbusCLI struct {
 func main() {
 	cli := &ModbusCLI{}
 	if err := cli.run(); err != nil {
-		fmt.Fprintf(os.Stderr, "go-modbus-cli: %v\n", err)
+		fmt.Fprintf(os.Stderr, "gomodbus: %v\n", err)
 		os.Exit(1)
 	}
 }
@@ -246,7 +246,7 @@ func (m *ModbusCLI) parseArgs() (*Config, error) {
 			os.Exit(0)
 
 		case "-V", "--version":
-			fmt.Println("go-modbus-cli v1.0.0")
+			fmt.Println("gomodbus v1.0.0")
 			os.Exit(0)
 
 		default:
@@ -700,10 +700,10 @@ func (m *ModbusCLI) getParityChar() byte {
 }
 
 func (m *ModbusCLI) printHelp() {
-	fmt.Println(`go-modbus-cli - Enhanced Modbus CLI tool
+	fmt.Println(`gomodbus - Enhanced Modbus CLI tool
 
 USAGE:
-  go-modbus-cli [OPTIONS] DEVICE|HOST [WRITE_VALUES...] [OPTIONS]
+  gomodbus [OPTIONS] DEVICE|HOST [WRITE_VALUES...] [OPTIONS]
 
 ARGUMENTS:
   DEVICE        Serial port when using Modbus RTU protocol
@@ -749,34 +749,34 @@ OTHER OPTIONS:
 
 EXAMPLES:
   # Read 2 holding registers starting at address 1 from TCP device
-  go-modbus-cli -t 4 -r 1 -c 2 192.168.1.100
+  gomodbus -t 4 -r 1 -c 2 192.168.1.100
 
   # Read input registers as 32-bit floats from RTU device
-  go-modbus-cli -m rtu -t 3:float -r 1 -c 2 /dev/ttyUSB0
+  gomodbus -m rtu -t 3:float -r 1 -c 2 /dev/ttyUSB0
 
   # Write values to holding registers
-  go-modbus-cli -t 4 -r 1 192.168.1.100 123 456 789
+  gomodbus -t 4 -r 1 192.168.1.100 123 456 789
 
   # Write 32-bit integers to holding registers
-  go-modbus-cli -t 4:int -r 1 192.168.1.100 123456 -789012
+  gomodbus -t 4:int -r 1 192.168.1.100 123456 -789012
 
   # Write 32-bit floats to holding registers
-  go-modbus-cli -t 4:float -r 1 192.168.1.100 3.14 -2.71
+  gomodbus -t 4:float -r 1 192.168.1.100 3.14 -2.71
 
   # Write coils
-  go-modbus-cli -t 0 -r 1 192.168.1.100 1 0 1 1
+  gomodbus -t 0 -r 1 192.168.1.100 1 0 1 1
 
   # Poll coils continuously
-  go-modbus-cli -t 0 -r 1 -c 8 -l 500 192.168.1.100
+  gomodbus -t 0 -r 1 -c 8 -l 500 192.168.1.100
 
   # Use RTU over TCP (tunneled serial)
-  go-modbus-cli -m rtuovertcp -t 4 -r 1 -c 2 192.168.1.100
+  gomodbus -m rtuovertcp -t 4 -r 1 -c 2 192.168.1.100
 
   # Use Modbus TCP over UDP
-  go-modbus-cli -m udp -t 4 -r 1 -c 2 192.168.1.100
+  gomodbus -m udp -t 4 -r 1 -c 2 192.168.1.100
 
   # Use Modbus TCP over TLS
-  go-modbus-cli -m tls -t 4 -r 1 -c 2 192.168.1.100`)
+  gomodbus -m tls -t 4 -r 1 -c 2 192.168.1.100`)
 }
 
 func boolToInt(b bool) int {
