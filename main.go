@@ -66,9 +66,35 @@ func (m *ModbusCLI) run() error {
 		return err
 	}
 
-	if err := m.connect(); err != nil {
-		return err
+	// Print configuration before attempting connection
+	if m.config.Verbose {
+		m.printConfig()
 	}
+
+	// Try to connect with retry logic
+	for {
+		if err := m.connect(); err != nil {
+			// If poll-once mode, return the error
+			if m.config.PollOnce {
+				return err
+			}
+
+			// Check if it's a connection error that should be retried
+			if m.isConnectionError(err) {
+				fmt.Printf("Connection failed (%v), retrying in %d ms...\n",
+					err, int(m.config.PollRate.Milliseconds()))
+				time.Sleep(m.config.PollRate)
+				continue
+			}
+
+			// For non-connection errors, return immediately
+			return err
+		}
+
+		// Connection successful, break out of retry loop
+		break
+	}
+
 	defer m.client.Close()
 
 	return m.execute()
@@ -472,6 +498,20 @@ func (m *ModbusCLI) performOperation(startRef int) error {
 	}
 }
 
+func (m *ModbusCLI) isConnectionError(err error) bool {
+	if err == nil {
+		return false
+	}
+	errStr := err.Error()
+	// Check for common connection error patterns
+	return strings.Contains(errStr, "failed to connect") ||
+		strings.Contains(errStr, "connection refused") ||
+		strings.Contains(errStr, "no such host") ||
+		strings.Contains(errStr, "network is unreachable") ||
+		strings.Contains(errStr, "connection reset") ||
+		strings.Contains(errStr, "broken pipe")
+}
+
 func (m *ModbusCLI) performWriteOperation(startRef int) error {
 	if len(m.config.WriteValues) == 0 {
 		return fmt.Errorf("no write values provided")
@@ -676,14 +716,73 @@ func (m *ModbusCLI) printRegisters(startRef int, registers []uint16, regType str
 }
 
 func (m *ModbusCLI) printConfig() {
-	fmt.Printf("Protocol configuration: Modbus %s\n", strings.ToUpper(m.config.Mode))
-	fmt.Printf("Slave configuration...: address = [%d]\n", m.config.SlaveID)
-	fmt.Printf("Data type.............: %s\n", m.config.DataType)
-	fmt.Printf("Communication.........: %s, %d-%d%c%d\n",
-		m.config.Device, m.config.Baudrate, m.config.Databits,
-		m.getParityChar(), m.config.Stopbits)
-	fmt.Printf("Timeout...............: %.2f s\n", m.config.Timeout.Seconds())
-	fmt.Printf("Poll rate.............: %d ms\n", int(m.config.PollRate.Milliseconds()))
+	fmt.Println("gomodbus 1.0.0 - Go Modbus Master CLI Tool")
+	fmt.Printf("                  Protocol configuration: Modbus %s\n", strings.ToUpper(m.config.Mode))
+
+	// Determine start reference for display
+	startRef := m.config.StartRef
+	if m.config.ZeroBased {
+		startRef = 0
+	}
+
+	// Determine data type description
+	var dataTypeDesc string
+	switch m.config.DataType {
+	case "0":
+		dataTypeDesc = "discrete output (coil)"
+	case "1":
+		dataTypeDesc = "discrete input"
+	case "3", "3:hex":
+		dataTypeDesc = "16-bit input register"
+	case "3:int":
+		dataTypeDesc = "32-bit integer in input register"
+	case "3:float":
+		dataTypeDesc = "32-bit float in input register"
+	case "4", "4:hex":
+		dataTypeDesc = "16-bit output (holding) register"
+	case "4:int":
+		dataTypeDesc = "32-bit integer in output register"
+	case "4:float":
+		dataTypeDesc = "32-bit float in output register"
+	default:
+		dataTypeDesc = m.config.DataType
+	}
+
+	fmt.Printf("                  Slave configuration...: address = [%d]\n", m.config.SlaveID)
+	fmt.Printf("                                          start reference = %d, count = %d\n", startRef, m.config.Count)
+
+	// Communication settings based on mode
+	if m.config.Mode == "rtu" || m.config.Mode == "rtuovertcp" || m.config.Mode == "rtuoverudp" {
+		fmt.Printf("                  Communication.........: %s, %d-%d%c%d\n",
+			m.config.Device, m.config.Baudrate, m.config.Databits,
+			m.getParityChar(), m.config.Stopbits)
+		fmt.Printf("                                          t/o %.2f s, poll rate %d ms\n",
+			m.config.Timeout.Seconds(), int(m.config.PollRate.Milliseconds()))
+	} else {
+		fmt.Printf("                  Communication.........: %s:%d\n", m.config.Host, m.config.Port)
+		fmt.Printf("                                          t/o %.2f s, poll rate %d ms\n",
+			m.config.Timeout.Seconds(), int(m.config.PollRate.Milliseconds()))
+	}
+
+	fmt.Printf("                  Data type.............: %s", dataTypeDesc)
+
+	// Show if it's a write operation
+	if len(m.config.WriteValues) > 0 {
+		fmt.Printf(" (write operation)")
+	} else {
+		fmt.Printf(" (read operation)")
+	}
+	fmt.Println()
+
+	// Show endianness if relevant
+	if m.config.DataType == "3:int" || m.config.DataType == "3:float" ||
+		m.config.DataType == "4:int" || m.config.DataType == "4:float" {
+		if m.config.BigEndian {
+			fmt.Printf("                  Endianness............: Big endian\n")
+		} else {
+			fmt.Printf("                  Endianness............: Little endian\n")
+		}
+	}
 }
 
 func (m *ModbusCLI) getParityChar() byte {
