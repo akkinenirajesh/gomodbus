@@ -44,8 +44,13 @@ jobs:
     - name: Run tests
       run: go test -v ./...
 
-    - name: Build binary
+    - name: Build binary (Unix)
+      if: runner.os != 'Windows'
       run: go build -v -o gomodbus main.go
+
+    - name: Build binary (Windows)
+      if: runner.os == 'Windows'
+      run: go build -v -o gomodbus.exe main.go
 
     - name: Test binary execution (Unix)
       if: runner.os != 'Windows'
