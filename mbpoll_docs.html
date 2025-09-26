@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="author" content="Canonical" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#E95420" />
+    <title>Ubuntu Manpage:
+
+       mbpoll is a command line utility to communicate with ModBus slave (RTU or TCP).
+    </title>
+    <link rel="stylesheet" href="https://assets.ubuntu.com/v1/vanilla-framework-version-1.8.1.min.css" />
+    <link rel="stylesheet" href="/assets/css/styles.css"/>
+    <link rel="icon" type="image/png" href="https://assets.ubuntu.com/v1/cb22ba5d-favicon-16x16.png" sizes="16x16" />
+    <link rel="icon" type="image/png" href="https://assets.ubuntu.com/v1/49a1a858-favicon-32x32.png" sizes="32x32" />
+    <link rel="apple-touch-icon" sizes="144x144" href="https://assets.ubuntu.com/v1/3361409d-apple-touch-icon-144x144-precomposed.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="https://assets.ubuntu.com/v1/5fe4d3c8-apple-touch-icon-114x114-precomposed.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="https://assets.ubuntu.com/v1/09460d9a-apple-touch-icon-72x72-precomposed.png" />
+    <link rel="apple-touch-icon" href="https://assets.ubuntu.com/v1/cc66da65-apple-touch-icon.png" />
+  </head>
+  <body>
+    <header id="navigation" class="p-navigation">
+      <div class="row">
+        <div class="p-navigation__banner">
+          <div class="p-navigation__logo">
+            <a class="p-navigation__link" href="/">
+              <img class="p-navigation__image" src="https://assets.ubuntu.com/v1/b93fecb3-ubuntu-manuals-lockup.svg" alt="">
+            </a>
+          </div>
+          <a href="#navigation" class="p-navigation__toggle--open" title="menu">Menu</a>
+          <a href="#navigation-closed" class="p-navigation__toggle--close" title="close menu">Close menu</a>
+        </div>
+        <nav class="p-navigation__nav" role="menubar">
+          <form class="p-search-box" method="get" action="/cgi-bin/search.py">
+            <input class="p-search-box__input" name="q" placeholder="Search" required="" type="search">
+            <button type="reset" class="p-search-box__reset" alt="reset"><i class="p-icon--close"></i></button>
+            <button type="submit" class="p-search-box__button" alt="search"><i class="p-icon--search"></i></button>
+          </form>
+          <span class="u-off-screen">
+            <a href="#main-content">Jump to main content</a>
+          </span>
+          <ul class="p-navigation__links" role="menu" id="navigation-container"></ul>
+        </nav>
+      </div>
+    </header>
+    <div id="main-content">
+      <section class="p-strip is-bordered">
+        <div class="row">
+          <div class="col-3 u-hide--small u-hide" id="toc">
+          </div>
+          <div id="tableWrapper">
+            <p id="distroAndSection"></p>
+
+Provided by: <a href='https://launchpad.net/ubuntu/jammy/+package/mbpoll'>mbpoll_1.4.11+dfsg-2_amd64</a> <a href='https://bugs.launchpad.net/ubuntu/+source/mbpoll/+filebug-advanced' title='Report a bug in the content of this documentation'><img src='/assets/img/bug.png' alt='bug' border=0></a><br><br><pre>
+</pre><h4><b>Presentation</b></h4><pre>
+       mbpoll is a command line utility to communicate with ModBus slave (RTU or TCP).
+       It uses libmodbus ⟨<a href="http://libmodbus.org/">http://libmodbus.org/</a>⟩.
+       This  is  a  multiplatform  project,  the  compilation  was tested on GNU Linux x86 and x86_64, Microsoft
+       Windows 7 x86 and GNU Linux ARM 6 (Raspbian).
+       Although the syntax of these  options  is  very  close  modpoll  proconX  program,  it  is  a  completely
+       independent project.
+
+       mbpoll can:
+
+              • read discrete inputs
+
+              • read and write binary outputs (<u>coil</u>)
+
+              • read input registers
+
+              • read and write output registers (<u>holding</u> <u>register</u>)
+
+       The reading and writing registers may be in decimal, hexadecimal or floating single precision.
+
+</pre><h4><b>Quickstart</b> <b>guide</b></h4><pre>
+       The  fastest  and  safest  way  to  install  mbpoll  is  to  use  the  APT  repository  from  piduino.org
+       ⟨<a href="http://apt.piduino.org">http://apt.piduino.org</a>⟩, so you should do the following :
+
+              wget -O- <a href="http://www.piduino.org/piduino-key.asc">http://www.piduino.org/piduino-key.asc</a> | sudo apt-key add -
+              sudo add-apt-repository 'deb <a href="http://apt.piduino.org">http://apt.piduino.org</a> stretch piduino'
+              sudo apt update
+              sudo apt install mbpoll
+
+       This repository provides <b>mbpoll</b> and <b>libmodbus</b> (version 3.1.4) packages for <b>i386</b>, <b>amd64</b>, <b>armhf</b>  and  <b>arm64</b>
+       architectures.   In the above commands, the repository is a Debian Stretch distribution, but you can also
+       choose Ubuntu Xenial by replacing <b>stretch</b> with <b>xenial</b>.
+       It may be necessary to install the <b>software-properties-common</b> package for <b>add-apt-repository</b>.
+
+       For Raspbian you have to do a little different :
+
+              wget -O- <a href="http://www.piduino.org/piduino-key.asc">http://www.piduino.org/piduino-key.asc</a> | sudo apt-key add -
+              echo 'deb <a href="http://raspbian.piduino.org">http://raspbian.piduino.org</a> stretch piduino' | sudo tee /etc/apt/sources.list.d/piduino.list
+              sudo apt update
+              sudo apt install mbpoll
+
+       The Raspbian repository provides Piduino packages for <b>armhf</b> architecture for Stretch only.
+
+</pre><h4><b>Build</b> <b>from</b> <b>source</b></h4><pre>
+       For example, for a debian system:
+
+              •
+
+              Install libmodbus ⟨https://github.com/stephane/libmodbus.git⟩ (Version &gt;= 3.1.4) :
+
+                     $ sudo apt-get install build-essential libtool git-core autoconf
+                     $ git clone https://github.com/stephane/libmodbus.git
+                     $ cd libmodbus
+                     $ ./autogen.sh
+                     $ ./configure
+                     $ make
+                     $ sudo make install
+
+       You can also install it with <b>apt</b> if the version of libmodbus is greater than  or  equal  to  3.1.4.   For
+       example to query a debian system:
+
+              $ apt-cache show libmodbus-dev
+
+              •
+
+              Install  piduino  ⟨https://github.com/epsilonrt/piduino/tree/dev⟩  <b>only</b>  <b>if</b> <b>you</b> <b>want</b> <b>to</b> <b>manage</b> <b>the</b>
+              <b>RS485</b> <b>with</b> <b>a</b> <b>GPIO</b> <b>signal</b>:
+
+                     $ sudo apt-get install cmake libcppdb-dev pkg-config libsqlite3-dev sqlite3
+                     $ git clone https://github.com/epsilonrt/piduino.git
+                     $ cd piduino
+                     $ git checkout dev
+                     $ mkdir build
+                     $ cd build
+                     $ cmake ..
+                     $ make
+                     $ sudo make install
+
+              •
+
+              Generate Makefile with cmake:
+
+                     $ sudo apt-get install cmake pkg-config
+                     $ cd mbpoll
+                     $ mkdir build
+                     $ cd build
+                     $ cmake ..
+
+              •
+
+              Compile and install mbpoll:
+
+                     $ make
+                     $ sudo make install
+                     $ sudo ldconfig
+
+       If you prefer, you can in the place of direct compilation create a package and install it:
+
+                  $ make package
+                  $ sudo dpkg -i * .deb
+
+       That's all !
+
+</pre><h4><b>Examples</b></h4><pre>
+       The following command is used to read the input registers 1 and 2 of the slave at  address  33  connected
+       through RTU /dev/ttyUSB2 (38400 Bd)
+
+________________________________________________________________________________________________________________
+
+                  $ mbpoll -a 33 -b 38400 -t 3 -r 1 -c 2 /dev/ttyUSB2
+
+                  mbpoll 0.1-10 - FieldTalk(tm) Modbus(R) Master Simulator
+                  Copyright (c) 2015 epsilonRT, All rights reserved.
+                  This software is governed by the CeCILL license &lt;<a href="http://www.cecill.info">http://www.cecill.info</a>&gt;
+
+                  Protocol configuration: Modbus RTU
+                  Slave configuration...: address = [33]
+                                          start reference = 1, count = 2
+                  Communication.........: /dev/ttyUSB2, 38400-8E1
+                                          t/o 1.00 s, poll rate 1000 ms
+                  Data type.............: 16-bit register, input register table
+
+                  -- Polling slave 33... Ctrl-C to stop)
+                  [1]:    9997
+                  [2]:    10034
+                  -- Polling slave 33... Ctrl-C to stop)
+                  [1]:    10007
+                  [2]:    10034
+                  -- Polling slave 33... Ctrl-C to stop)
+                  [1]:    10007
+                  [2]:    10034
+                  -- Polling slave 33... Ctrl-C to stop)
+                  [1]:    10007
+                  [2]:    10034
+                  ^C--- /dev/ttyUSB2 poll statistics ---
+                  4 frames transmitted, 4 received, 0 errors, 0.0% frame loss
+
+                  everything was closed.
+                  Have a nice day !
+
+</pre><h4><b>Help</b></h4><pre>
+       A complete help is available with the -h option:
+
+              usage : mbpoll [ options ] device|host [ writevalues... ] [ options ]
+
+              ModBus Master Simulator. It allows to read and write in ModBus slave registers
+                                       connected by serial (RTU only) or TCP.
+
+              Arguments :
+                device        Serial port when using ModBus RTU protocol
+                                COM1, COM2 ...              on Windows
+                                /dev/ttyS0, /dev/ttyS1 ...  on Linux
+                                /dev/ser1, /dev/ser2 ...    on QNX
+                host          Host name or dotted IP address when using ModBus/TCP protocol
+                writevalues   List of values to be written.
+                              If none specified (default) mbpoll reads data.
+                              If negative numbers are provided, it will precede the list of
+                              data to be written by two dashes ('--'). for example :
+                              mbpoll -t4:int /dev/ttyUSB0 -- 123 -1568 8974 -12
+              General options :
+                -m #          mode (rtu or tcp, TCP is default)
+                -a #          Slave address (1-255 for rtu, 0-255 for tcp, 1 is default)
+                              for reading, it is possible to give an address list
+                              separated by commas or colons, for example :
+                              -a 32,33,34,36:40 read [32,33,34,36,37,38,39,40]
+                -r #          Start reference (1 is default)
+                -c #          Number of values to read (1-125, 1 is default)
+                -u            Read the description of the type, the current status, and other
+                              information specific to a remote device (RTU only)
+                -t 0          Discrete output (coil) data type (binary 0 or 1)
+                -t 1          Discrete input data type (binary 0 or 1)
+                -t 3          16-bit input register data type
+                -t 3:hex      16-bit input register data type with hex display
+                -t 3:int      32-bit integer data type in input register table
+                -t 3:float    32-bit float data type in input register table
+                -t 4          16-bit output (holding) register data type (default)
+                -t 4:hex      16-bit output (holding) register data type with hex display
+                -t 4:int      32-bit integer data type in output (holding) register table
+                -t 4:float    32-bit float data type in output (holding) register table
+                -0            First reference is 0 (PDU addressing) instead 1
+                -B            Big endian word order for 32-bit integer and float
+                -1            Poll only once only, otherwise every poll rate interval
+                -l #          Poll rate in ms, ( &gt; 10, 1000 is default)
+                -o #          Time-out in seconds (0.01 - 10.00, 1.00 s is default)
+              Options for ModBus / TCP :
+                -p #          TCP port number (502 is default)
+              Options for ModBus RTU :
+                -b #          Baudrate (1200-921600, 19200 is default)
+                -d #          Databits (7 or 8, 8 for RTU)
+                -s #          Stopbits (1 or 2, 1 is default)
+                -P #          Parity (none, even, odd, even is default)
+                -R [#]        RS-485 mode (/RTS on (0) after sending)
+                               Optional parameter for the GPIO RTS pin number
+                -F [#]        RS-485 mode (/RTS on (0) when sending)
+                               Optional parameter for the GPIO RTS pin number
+
+                -h            Print this help summary page
+                -V            Print version and exit
+                -v            Verbose mode.  Causes mbpoll to print debugging messages about
+                              its progress.  This is helpful in debugging connection...
+
+________________________________________________________________________________________________________________
+
+              Copyright © 2015-2019 Pascal JEAN, All rights reserved.
+
+              mbpoll  is  free  software:  you  can  redistribute it and/or modify it under the terms of the GNU
+              General Public License as published by the Free Software  Foundation,  either  version  3  of  the
+              License, or (at your option) any later version.
+
+              mbpoll  is  distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+              the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  General
+              Public License for more details.
+
+              You  should  have received a copy of the GNU General Public License along with mbpoll. If not, see
+              ⟨<a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>⟩.
+
+                                                                                                        <u>mbpoll</u>()
+</pre>
+</pre>        </div>
+      </section>
+    </div>
+    <footer class="p-strip is-shallow">
+      <div class="row">
+        <p>Powered by the <a href="https://github.com/canonical/ubuntu-manpages-operator">Ubuntu Manpage Operator</a>, file bugs in <a href="https://github.com/canonical/ubuntu-manpages-operator/issues">Github</a></p>
+        <p>&copy; 2025 Canonical. Ubuntu and Canonical are registered trademarks of Canonical Ltd.</p>
+      </div>
+    </footer>
+    <script src="/functions.js"></script>
+  </body>
+</html>
+
