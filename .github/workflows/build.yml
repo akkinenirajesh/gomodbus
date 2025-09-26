@@ -1,0 +1,84 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        go-version: ['1.20', '1.21', '1.22']
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: ${{ matrix.go-version }}
+
+    - name: Cache Go modules
+      uses: actions/cache@v3
+      with:
+        path: ~/go/pkg/mod
+        key: ${{ runner.os }}-go-${{ matrix.go-version }}-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-go-${{ matrix.go-version }}-
+          ${{ runner.os }}-go-
+
+    - name: Download dependencies
+      run: go mod download
+
+    - name: Verify dependencies
+      run: go mod verify
+
+    - name: Run go vet
+      run: go vet ./...
+
+    - name: Run tests
+      run: go test -v ./...
+
+    - name: Build binary
+      run: go build -v -o gomodbus main.go
+
+    - name: Test help output
+      run: ./gomodbus --help | head -20
+
+    - name: Test version output
+      run: ./gomodbus --version
+
+    - name: Test error handling
+      run: |
+        # Test missing arguments
+        ./gomodbus 2>&1 | grep -q "device or host parameter missing"
+        echo "Error handling test passed"
+
+    - name: Upload build artifacts (Ubuntu)
+      if: matrix.os == 'ubuntu-latest' && matrix.go-version == '1.21'
+      uses: actions/upload-artifact@v3
+      with:
+        name: gomodbus-ubuntu-${{ matrix.go-version }}
+        path: ./gomodbus
+        retention-days: 30
+
+    - name: Upload build artifacts (Windows)
+      if: matrix.os == 'windows-latest' && matrix.go-version == '1.21'
+      uses: actions/upload-artifact@v3
+      with:
+        name: gomodbus-windows-${{ matrix.go-version }}.exe
+        path: ./gomodbus.exe
+        retention-days: 30
+
+    - name: Upload build artifacts (macOS)
+      if: matrix.os == 'macos-latest' && matrix.go-version == '1.21'
+      uses: actions/upload-artifact@v3
+      with:
+        name: gomodbus-macos-${{ matrix.go-version }}
+        path: ./gomodbus
+        retention-days: 30

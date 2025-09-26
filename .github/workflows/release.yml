@@ -1,0 +1,134 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.21'
+
+    - name: Cache Go modules
+      uses: actions/cache@v3
+      with:
+        path: ~/go/pkg/mod
+        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-go-
+
+    - name: Run tests
+      run: go test -v ./...
+
+    - name: Build binaries
+      run: |
+        mkdir -p dist
+        # Build for Linux (amd64)
+        GOOS=linux GOARCH=amd64 go build -o dist/gomodbus-linux-amd64 main.go
+        # Build for Linux (arm64)
+        GOOS=linux GOARCH=arm64 go build -o dist/gomodbus-linux-arm64 main.go
+        # Build for Windows (amd64)
+        GOOS=windows GOARCH=amd64 go build -o dist/gomodbus-windows-amd64.exe main.go
+        # Build for Windows (arm64)
+        GOOS=windows GOARCH=arm64 go build -o dist/gomodbus-windows-arm64.exe main.go
+        # Build for macOS (amd64)
+        GOOS=darwin GOARCH=amd64 go build -o dist/gomodbus-darwin-amd64 main.go
+        # Build for macOS (arm64)
+        GOOS=darwin GOARCH=arm64 go build -o dist/gomodbus-darwin-arm64 main.go
+
+    - name: Create checksums
+      run: |
+        cd dist
+        sha256sum * > checksums.txt
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+
+    - name: Upload Linux amd64 binary
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dist/gomodbus-linux-amd64
+        asset_name: gomodbus-linux-amd64
+        asset_content_type: application/octet-stream
+
+    - name: Upload Linux arm64 binary
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dist/gomodbus-linux-arm64
+        asset_name: gomodbus-linux-arm64
+        asset_content_type: application/octet-stream
+
+    - name: Upload Windows amd64 binary
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dist/gomodbus-windows-amd64.exe
+        asset_name: gomodbus-windows-amd64.exe
+        asset_content_type: application/octet-stream
+
+    - name: Upload Windows arm64 binary
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dist/gomodbus-windows-arm64.exe
+        asset_name: gomodbus-windows-arm64.exe
+        asset_content_type: application/octet-stream
+
+    - name: Upload macOS amd64 binary
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dist/gomodbus-darwin-amd64
+        asset_name: gomodbus-darwin-amd64
+        asset_content_type: application/octet-stream
+
+    - name: Upload macOS arm64 binary
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dist/gomodbus-darwin-arm64
+        asset_name: gomodbus-darwin-arm64
+        asset_content_type: application/octet-stream
+
+    - name: Upload checksums
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dist/checksums.txt
+        asset_name: checksums.txt
+        asset_content_type: text/plain

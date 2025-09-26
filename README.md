@@ -31,9 +31,26 @@ A powerful, enhanced command-line tool for Modbus communication that replicates 
 - Serial port access (for RTU modes)
 
 ### Quick Install
+
+#### Option 1: Download Pre-built Binaries (Recommended)
+Download the latest release for your platform from the [GitHub Releases](https://github.com/akkinenirajesh/gomodbus/releases) page:
+
+**Supported Platforms:**
+- Linux (amd64, arm64)
+- Windows (amd64, arm64)
+- macOS (amd64, arm64)
+
+```bash
+# Download and extract (example for Linux amd64)
+wget https://github.com/akkinenirajesh/gomodbus/releases/latest/download/gomodbus-linux-amd64
+chmod +x gomodbus-linux-amd64
+sudo mv gomodbus-linux-amd64 /usr/local/bin/gomodbus
+```
+
+#### Option 2: Build from Source
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/akkinenirajesh/gomodbus.git
 cd gomodbus
 
 # Build the CLI
@@ -240,7 +257,42 @@ gomodbus: unsupported mode: invalid (supported: tcp, tls, udp, rtu, rtuovertcp, 
 5. Push to the branch: `git push origin feature-name`
 6. Submit a pull request
 
-## 📝 License
+## 🔧 Development & CI/CD
+
+### Automated Builds
+This project uses GitHub Actions for continuous integration and automated releases:
+
+- **Build & Test Workflow**: Runs on every push and pull request
+  - Tests across multiple Go versions (1.20, 1.21, 1.22)
+  - Cross-platform testing (Linux, Windows, macOS)
+  - Code quality checks with `go vet`
+  - Automated binary generation for testing
+
+- **Release Workflow**: Automatically triggered on version tags (e.g., `v1.0.0`)
+  - Builds binaries for all supported platforms
+  - Creates GitHub releases with downloadable assets
+  - Generates SHA256 checksums for verification
+
+### Building for Multiple Platforms
+The release workflow automatically builds for:
+- **Linux**: amd64, arm64
+- **Windows**: amd64, arm64
+- **macOS**: amd64, arm64
+
+### Creating a Release
+To create a new release:
+```bash
+# Create and push a version tag
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+The GitHub Actions workflow will automatically:
+1. Build binaries for all platforms
+2. Create a GitHub release
+3. Upload all binaries and checksums
+
+##  License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
