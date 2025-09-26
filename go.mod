@@ -1,6 +1,6 @@
 module gomodbus
 
-go 1.22.1
+go 1.22
 
 require github.com/simonvetter/modbus v1.6.3
 
