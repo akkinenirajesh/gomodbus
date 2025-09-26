@@ -27,7 +27,7 @@ A powerful, enhanced command-line tool for Modbus communication that replicates 
 ## 📦 Installation
 
 ### Prerequisites
-- Go 1.19 or later
+- Go 1.21 or later
 - Serial port access (for RTU modes)
 
 ### Quick Install
