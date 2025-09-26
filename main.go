@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"math"
 	"os"
 	"strconv"
@@ -51,7 +50,8 @@ type ModbusCLI struct {
 func main() {
 	cli := &ModbusCLI{}
 	if err := cli.run(); err != nil {
-		log.Fatal(err)
+		fmt.Fprintf(os.Stderr, "go-modbus-cli: %v\n", err)
+		os.Exit(1)
 	}
 }
 
@@ -287,7 +287,7 @@ func (m *ModbusCLI) parseArgs() (*Config, error) {
 	}
 
 	if config.Host == "" && config.Device == "" {
-		return nil, fmt.Errorf("missing device or host")
+		return nil, fmt.Errorf("device or host parameter missing ! Try -h for help")
 	}
 
 	// Validation
