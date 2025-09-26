@@ -1,5 +1,11 @@
 # gomodbus
 
+[![GitHub All Releases](https://img.shields.io/github/downloads/akkinenirajesh/gomodbus/total?style=for-the-badge)](https://github.com/akkinenirajesh/gomodbus/releases)
+[![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/akkinenirajesh/gomodbus?style=for-the-badge)](https://github.com/akkinenirajesh/gomodbus/releases)
+[![GitHub stars](https://img.shields.io/github/stars/akkinenirajesh/gomodbus?style=for-the-badge)](https://github.com/akkinenirajesh/gomodbus/stargazers)
+[![GitHub issues](https://img.shields.io/github/issues-raw/akkinenirajesh/gomodbus?style=for-the-badge)](https://github.com/akkinenirajesh/gomodbus/issues)
+[![GitHub](https://img.shields.io/github/license/akkinenirajesh/gomodbus?style=for-the-badge)](https://github.com/akkinenirajesh/gomodbus/blob/main/LICENSE)
+
 A powerful, enhanced command-line tool for Modbus communication that replicates all **mbpoll** functionality while adding advanced capabilities from the **gomodbus** library.
 
 ## 🚀 Overview
