@@ -19,12 +19,12 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Set up Go
-      uses: actions/setup-go@v4
+      uses: actions/setup-go@v5
       with:
         go-version: ${{ matrix.go-version }}
 
     - name: Cache Go modules
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/go/pkg/mod
         key: ${{ runner.os }}-go-${{ matrix.go-version }}-${{ hashFiles('**/go.sum') }}
@@ -61,7 +61,7 @@ jobs:
 
     - name: Upload build artifacts (Ubuntu)
       if: matrix.os == 'ubuntu-latest' && matrix.go-version == '1.21'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: gomodbus-ubuntu-${{ matrix.go-version }}
         path: ./gomodbus
@@ -69,7 +69,7 @@ jobs:
 
     - name: Upload build artifacts (Windows)
       if: matrix.os == 'windows-latest' && matrix.go-version == '1.21'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: gomodbus-windows-${{ matrix.go-version }}.exe
         path: ./gomodbus.exe
@@ -77,7 +77,7 @@ jobs:
 
     - name: Upload build artifacts (macOS)
       if: matrix.os == 'macos-latest' && matrix.go-version == '1.21'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: gomodbus-macos-${{ matrix.go-version }}
         path: ./gomodbus
